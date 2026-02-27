@@ -10,28 +10,28 @@ import uvicorn
 
 BOT_TOKEN = "8557283415:AAEWmvxipGRQsJFaTWn98uR4kQvMA_nWX5U"
 PORT = 10000
-app = FastAPI()
 disp = Dispatcher()
+app = FastAPI()
 
 
 @disp.message(Command("start"))
 async def startMethod(message: Message):
     await message.answer("Bot active")
 
+
 @app.get("/")
 async def check():
-    return {"status":"bot is running"}
+    return {"status": "bot is running"}
 
 
-async def main():
+@app.on_event("startup")
+async def startup():
     bot = Bot(token=BOT_TOKEN)
-    await disp.start_polling(bot)
-
-
-async def runner():
-    asyncio.run(main())
+    asyncio.create_task(disp.start_polling(bot))
 
 
 if __name__ == "__main__":
-    threading.Thread(target=runner).start()
     uvicorn.run(app, host="0.0.0.0", port=PORT)
+
+
+
