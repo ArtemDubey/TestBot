@@ -19,7 +19,7 @@ async def startMethod(message: Message):
     await message.answer("Bot active")
 
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 async def check():
     return {"status": "bot is running"}
 
